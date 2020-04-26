@@ -2,8 +2,8 @@
   <div id="nav">
     <router-link to="/">Home</router-link>
     <router-link v-if="loggedIn" to="/dashboard">Dashboard</router-link>
-    <router-link v-if="!loggedIn" to="/login" class="button is-primary">Login</router-link>
-    <button v-else type="button" class="button is-primary" @click="logout">Logout</button>
+    <router-link v-if="!loggedIn" to="/login" class="button btn-primary">Login</router-link>
+    <button v-else type="button" class="button btn-primary" @click="logout">Logout</button>
   </div>
 </template>
 
@@ -56,9 +56,9 @@ a:hover {
 button,
 .button {
   margin-left: auto;
-  background: white;
   text-decoration: none;
-  color: #2c3e50;
+  color: white;
+  border: none;
 
   &.router-link-active {
     color: #2c3e50;

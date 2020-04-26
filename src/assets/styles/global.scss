@@ -1,7 +1,12 @@
-@import '~bulma/css/bulma.css';
+$background: #0e2439;
+@import '~bulma/bulma';
 
 body {
 	color: #fff;
 	height: 100vh;
-	background: #0e2439;
+	background: $background;
+}
+
+.btn-primary {
+	background-image: linear-gradient(to right, #e052a0, #f15c41);
 }

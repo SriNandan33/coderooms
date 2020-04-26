@@ -2,8 +2,8 @@
   <div id="nav">
     <router-link to="/">Home</router-link>
     <router-link v-if="loggedIn" to="/dashboard">Dashboard</router-link>
-    <router-link v-if="!loggedIn" to="/login" class="button btn-primary">Login</router-link>
-    <button v-else type="button" class="button btn-primary" @click="logout">Logout</button>
+    <router-link v-if="!loggedIn" to="/login" class="button btn-secondary">Login</router-link>
+    <button v-else type="button" class="button btn-secondary" @click="logout">Logout</button>
   </div>
 </template>
 
@@ -36,7 +36,8 @@ export default {
   color: #9cb3c9;
 }
 
-a {
+a,
+button {
   font-weight: bold;
   color: #9cb3c9;
   margin: auto 0.8em auto 0.4em;
@@ -59,10 +60,9 @@ button,
   text-decoration: none;
   color: white;
   border: none;
-
-  &.router-link-active {
-    color: #2c3e50;
-  }
+}
+.button:hover {
+  color: white;
 }
 
 .logoutButton {

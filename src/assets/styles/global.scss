@@ -1,12 +1,49 @@
 $background: #0e2439;
 @import '~bulma/bulma';
 
-body {
-	color: #fff;
-	height: 100vh;
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
 	background: $background;
 }
 
+body {
+	color: #fff;
+}
+
+a,
+a:hover,
+.button:hover {
+	color: #fff;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+.button {
+	font-weight: bold;
+	color: #fff;
+	margin-bottom: 10px;
+}
+
 .btn-primary {
+	background-image: linear-gradient(to right, #3ec7e0, #526bf4);
+	border: none;
+}
+
+.btn-secondary,
+.btn-primary:hover {
 	background-image: linear-gradient(to right, #e052a0, #f15c41);
+}
+
+.auth-form {
+	width: 70%;
+	margin: 0 auto;
+}
+
+.auth-form input {
+	margin-bottom: 10px;
 }

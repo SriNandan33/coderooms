@@ -7,6 +7,14 @@
       <div class="column">
         <h1 class="title is-2 has-text-white has-text-centered">Signup</h1>
         <form class="auth-form" @submit.prevent="register">
+          <label for="name">Username</label>
+          <input
+            v-model="username"
+            type="text"
+            name="name"
+            class="input"
+            placeholder="captainjohnsmith"
+          />
           <label for="name">Name</label>
           <input
             v-model="name"
@@ -36,9 +44,7 @@
 
           <button type="submit" name="button" class="button btn-primary">Register</button>
 
-          <ul>
-            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-          </ul>
+          <p class="has-text-danger">{{ error }}</p>
 
           <router-link to="/login">Already have an account? Login.</router-link>
         </form>
@@ -51,10 +57,11 @@
 export default {
   data() {
     return {
+      username: '',
       name: '',
       email: '',
       password: '',
-      errors: null
+      error: null
     }
   },
   methods: {
@@ -62,6 +69,7 @@ export default {
       this.$store
         .dispatch('register', {
           name: this.name,
+          username: this.username,
           email: this.email,
           password: this.password
         })
@@ -69,7 +77,7 @@ export default {
           this.$router.push({ name: 'dashboard' })
         })
         .catch(err => {
-          this.errors = err.response.data.errors
+          this.error = err.response.data.error
         })
     }
   }

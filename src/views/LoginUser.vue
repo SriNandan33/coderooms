@@ -27,7 +27,7 @@
 
           <button type="submit" name="button" class="button btn-primary">Login</button>
 
-          <p>{{ error }}</p>
+          <p class="has-text-danger">{{ error }}</p>
 
           <router-link to="/register">Don't have an account? Register.</router-link>
         </form>

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 import Dashboard from './views/Dashboard.vue'
 import RegisterUser from './views/RegisterUser.vue'
 import LoginUser from './views/LoginUser.vue'
@@ -13,11 +12,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/dashboard',
+      alias: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
       meta: { requiresAuth: true }

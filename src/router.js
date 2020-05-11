@@ -38,8 +38,14 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem('user')
 
+  // if user already logged in prevent him going to login/register
+  if ((to.name === 'login' || to.name === 'register') && loggedIn) {
+    next({ name: 'dashboard' })
+  }
+
+  // if user is not logged in, redirect him to login page on protected routes
   if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
-    next('/')
+    next({ name: 'login' })
   }
   next()
 })

@@ -24,14 +24,14 @@ export default new Vuex.Store({
   actions: {
     register({ commit }, credentials) {
       return axios
-        .post('//localhost:3001/api/auth/register', credentials)
+        .post(`${process.env.VUE_APP_API_BASE_URL}auth/register`, credentials)
         .then(({ data }) => {
           commit('SET_USER_DATA', data)
         })
     },
     login({ commit }, credentials) {
       return axios
-        .post('//localhost:3001/api/auth/login', credentials)
+        .post(`${process.env.VUE_APP_API_BASE_URL}auth/login`, credentials)
         .then(({ data }) => {
           commit('SET_USER_DATA', data)
         })

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from './views/Dashboard.vue'
 import RegisterUser from './views/RegisterUser.vue'
 import LoginUser from './views/LoginUser.vue'
+import Room from './views/Room.vue'
 
 Vue.use(Router)
 
@@ -26,6 +27,13 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: LoginUser
+    },
+    {
+      path: '/rooms/:roomId',
+      name: 'room',
+      component: Room,
+      props: true,
+      meta: { requiresAuth: true }
     }
   ]
 })

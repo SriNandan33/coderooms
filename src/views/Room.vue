@@ -1,5 +1,12 @@
 <template>
   <section>
+    <div class="container">
+      <div class="columns toolbar">
+        <div class="column">
+          <button class="button btn-secondary" @click="updateRoom">Save</button>
+        </div>
+      </div>
+    </div>
     <div class="container is-fluid dashboard">
       <div class="columns">
         <div class="column is-half">
@@ -11,7 +18,6 @@
             @focus="onCmFocus"
             @input="onCmCodeChange"
           />
-          <div class="button is-primary" @click="updateRoom">Save</div>
         </div>
         <div class="column is-half">
           <div>Drawing Board ( coming soon )</div>
@@ -104,9 +110,13 @@ export default {
   width: 100%;
   margin: 0;
 }
+.dashboard .columns .column {
+  padding: 0;
+  border: 3px solid #1f364d;
+  background: #001528;
+}
 .vue-codemirror {
   height: 80vh;
-  border: 3px solid #1f364d;
   border-radius: 4px;
 }
 .vue-codemirror >>> .CodeMirror {
@@ -115,5 +125,9 @@ export default {
 .vue-codemirror >>> .cm-s-monokai.CodeMirror,
 .vue-codemirror >>> .cm-s-monokai .CodeMirror-gutters {
   background: #001528 !important;
+}
+
+.toolbar {
+  padding: 10px;
 }
 </style>

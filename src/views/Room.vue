@@ -1,7 +1,10 @@
 <template>
   <section>
-    <div class="container">
-      <div class="columns toolbar">
+    <div class="container is-fluid toolbar">
+      <div class="columns">
+        <div class="column">
+          <multiselect v-model="selectedLanguage" class="languages" :options="languages"></multiselect>
+        </div>
         <div class="column">
           <button class="button btn-secondary" @click="updateRoom">Save</button>
         </div>
@@ -29,6 +32,7 @@
 
 <script>
 import axios from 'axios'
+import Multiselect from 'vue-multiselect'
 // import language js
 import { codemirror } from 'vue-codemirror'
 
@@ -43,7 +47,8 @@ import 'codemirror/theme/monokai.css'
 
 export default {
   components: {
-    codemirror
+    codemirror,
+    Multiselect
   },
   props: {
     roomId: {
@@ -56,6 +61,8 @@ export default {
       room: {
         code: ''
       },
+      selectedLanguage: null,
+      languages: ['Javascript', 'Python'],
       cmOptions: {
         tabSize: 4,
         mode: 'text/javascript',
@@ -102,6 +109,7 @@ export default {
   }
 }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 .dashboard {
   padding: 0;
@@ -126,8 +134,21 @@ export default {
 .vue-codemirror >>> .cm-s-monokai .CodeMirror-gutters {
   background: #001528 !important;
 }
-
 .toolbar {
   padding: 10px;
+  margin: 0;
+  width: 100%;
+}
+.languages {
+  color: #fff;
+}
+.languages >>> .multiselect__tags,
+.languages >>> .multiselect__tags .multiselect__single,
+.languages >>> .multiselect__tags .multiselect__input,
+.languages >>> .multiselect__content-wrapper {
+  background: #0e2439;
+}
+.languages >>> .multiselect__tags {
+  border: 1px solid #1f364d;
 }
 </style>

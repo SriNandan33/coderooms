@@ -62,7 +62,7 @@ export default {
         code: ''
       },
       selectedLanguage: null,
-      languages: ['Javascript', 'Python'],
+      languages: ['javascript', 'python'],
       cmOptions: {
         tabSize: 4,
         mode: 'text/javascript',
@@ -111,6 +111,7 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
+/* TODO: refactor it into scss (need to learn :D) */
 .dashboard {
   padding: 0;
 }
@@ -147,8 +148,13 @@ export default {
 .languages >>> .multiselect__tags .multiselect__input,
 .languages >>> .multiselect__content-wrapper {
   background: #0e2439;
+  text-transform: capitalize;
 }
-.languages >>> .multiselect__tags {
+.languages >>> .multiselect__tags,
+.languages >>> .multiselect__content-wrapper {
   border: 1px solid #1f364d;
+}
+.languages >>> .multiselect__option {
+  text-transform: capitalize;
 }
 </style>

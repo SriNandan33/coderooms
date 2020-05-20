@@ -3,7 +3,12 @@
     <div class="container is-fluid toolbar">
       <div class="columns">
         <div class="column">
-          <multiselect v-model="selectedLanguage" class="languages" :options="languages"></multiselect>
+          <multiselect
+            v-model="room.language"
+            class="languages"
+            :options="languages"
+            @input="setLanguageMode"
+          ></multiselect>
         </div>
         <div class="column">
           <button class="button btn-secondary" @click="updateRoom">Save</button>
@@ -33,17 +38,16 @@
 <script>
 import axios from 'axios'
 import Multiselect from 'vue-multiselect'
-// import language js
 import { codemirror } from 'vue-codemirror'
 
 // import base style
 import 'codemirror/lib/codemirror.css'
+// import language js
 import 'codemirror/mode/javascript/javascript.js'
+import 'codemirror/mode/python/python.js'
 
 // import theme style
 import 'codemirror/theme/monokai.css'
-
-// import more 'codemirror/some-resource...'
 
 export default {
   components: {
@@ -59,9 +63,9 @@ export default {
   data() {
     return {
       room: {
-        code: ''
+        code: '',
+        language: ''
       },
-      selectedLanguage: null,
       languages: ['javascript', 'python'],
       cmOptions: {
         tabSize: 4,
@@ -69,7 +73,10 @@ export default {
         theme: 'monokai',
         lineNumbers: true,
         line: true
-        // more CodeMirror options...
+      },
+      languageModes: {
+        python: 'x-python',
+        javascript: 'javascript'
       }
     }
   },
@@ -79,32 +86,25 @@ export default {
     }
   },
   async created() {
-    console.log('in created', this.roomId)
     const response = await axios.get(
       `${process.env.VUE_APP_API_BASE_URL}rooms/${this.roomId}`
     )
     this.room = { ...this.room, ...response.data.room }
-    console.log('the current CodeMirror instance object:', this.codemirror)
-    // you can use this.codemirror to do something...
+    this.setLanguageMode()
   },
   async mounted() {},
   methods: {
-    onCmReady(cm) {
-      console.log('the editor is readied!', cm)
-    },
-    onCmFocus(cm) {
-      console.log('the editor is focused!', cm)
-    },
     onCmCodeChange(newCode) {
-      console.log('this is new code', newCode)
       this.room.code = newCode
     },
     async updateRoom() {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.VUE_APP_API_BASE_URL}rooms/${this.roomId}`,
         this.room
       )
-      console.log(response)
+    },
+    setLanguageMode() {
+      this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`
     }
   }
 }

@@ -22,8 +22,6 @@
             ref="cmEditor"
             :value="room.code"
             :options="cmOptions"
-            @ready="onCmReady"
-            @focus="onCmFocus"
             @input="onCmCodeChange"
           />
         </div>

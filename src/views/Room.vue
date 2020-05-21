@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Multiselect from 'vue-multiselect'
 import { codemirror } from 'vue-codemirror'
 
@@ -84,9 +83,7 @@ export default {
     }
   },
   async created() {
-    const response = await axios.get(
-      `${process.env.VUE_APP_API_BASE_URL}rooms/${this.roomId}`
-    )
+    const response = await this.$http.get(`rooms/${this.roomId}`)
     this.room = { ...this.room, ...response.data.room }
     this.setLanguageMode()
   },
@@ -96,10 +93,7 @@ export default {
       this.room.code = newCode
     },
     async updateRoom() {
-      await axios.put(
-        `${process.env.VUE_APP_API_BASE_URL}rooms/${this.roomId}`,
-        this.room
-      )
+      await this.$http.put(`rooms/${this.roomId}`, this.room)
     },
     setLanguageMode() {
       this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`

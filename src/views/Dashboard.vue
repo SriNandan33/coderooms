@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -19,7 +18,7 @@ export default {
     }
   },
   async created() {
-    const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}rooms`)
+    const response = await this.$http.get('rooms')
     this.rooms = response.data.rooms
   }
 }

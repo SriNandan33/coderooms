@@ -37,7 +37,7 @@ new Vue({
         return response
       },
       error => {
-        this.$loading.hide()
+        loader.hide()
         if (error.response.status === 401) {
           this.$store.dispatch('logout')
         }

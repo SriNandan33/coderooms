@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <div class="container">
-      <div class="columns">
+      <div class="columns has-text-centered">
         <div class="column">Ready to share you code with the world?</div>
         <div class="column">
           <button class="button btn-secondary" @click="createRoom">Create Room</button>

@@ -2,6 +2,9 @@
   <section>
     <div class="container is-fluid toolbar">
       <div class="columns">
+        <div class="column is-one-fifth">
+          <input v-model="room.name" type="text" class="input room-title" />
+        </div>
         <div class="column">
           <multiselect
             v-model="room.language"
@@ -131,6 +134,15 @@ export default {
   padding: 10px;
   margin: 0;
   width: 100%;
+}
+.toolbar .room-title,
+.toolbar .room-title:focus {
+  background: #0e2439;
+  color: #fff;
+  border: none;
+  border-bottom: 1px solid #1f364d;
+  border-radius: 0;
+  outline: none;
 }
 .languages {
   color: #fff;

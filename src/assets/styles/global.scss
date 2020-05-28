@@ -1,4 +1,8 @@
 $background: #0e2439;
+$table-color: #fff;
+$table-background-color: $background;
+$table-cell-border: 1px solid #fff;
+
 @import '~bulma/bulma';
 
 * {

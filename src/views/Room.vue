@@ -29,7 +29,7 @@
           />
         </div>
         <div class="column is-half">
-          <div>Drawing Board ( coming soon )</div>
+          <DrawingBoard />
         </div>
       </div>
     </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import DrawingBoard from '../components/DrawingBoard'
 import Multiselect from 'vue-multiselect'
 import { codemirror } from 'vue-codemirror'
 
@@ -52,7 +53,8 @@ import 'codemirror/theme/monokai.css'
 export default {
   components: {
     codemirror,
-    Multiselect
+    Multiselect,
+    DrawingBoard
   },
   props: {
     roomId: {

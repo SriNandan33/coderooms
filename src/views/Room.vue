@@ -5,11 +5,13 @@
         <div class="column is-one-fifth">
           <input v-model="room.name" type="text" class="input room-title" />
         </div>
-        <div class="column">
+        <div class="column is-one-fifth">
           <multiselect
             v-model="room.language"
             class="languages"
             :options="languages"
+            :show-labels="false"
+            placeholder="Select a language"
             @input="setLanguageMode"
           ></multiselect>
         </div>

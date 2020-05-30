@@ -9,6 +9,13 @@
       @mouseout="onMouseUp"
       @mousemove="onMouseMove"
     ></canvas>
+    <div class="colors columns" @click="changeStrokeColor">
+      <div class="column color red" data-color="red"></div>
+      <div class="column color white" data-color="white"></div>
+      <div class="column color blue" data-color="blue"></div>
+      <div class="column color yellow" data-color="yellow"></div>
+      <div class="column color green" data-color="green"></div>
+    </div>
   </div>
 </template>
 
@@ -21,7 +28,14 @@ export default {
       drawing: false,
       currentColor: 'white',
       currentX: null,
-      currentY: null
+      currentY: null,
+      colorCodes: {
+        white: '#fff',
+        red: '#f44336',
+        green: '#4caf50',
+        blue: '#2196f3',
+        yellow: '#ffdd57'
+      }
     }
   },
   mounted() {
@@ -53,6 +67,12 @@ export default {
       this.canvasContext.lineWidth = 1.5
       this.canvasContext.stroke()
       this.canvasContext.closePath()
+    },
+    changeStrokeColor(event) {
+      // eslint-disable-next-line standard/computed-property-even-spacing
+      this.currentColor = this.colorCodes[
+        event.target.attributes['data-color'].nodeValue
+      ]
     }
   }
 }
@@ -61,11 +81,39 @@ export default {
 <style lang="scss" scoped>
 .drawingboard-container {
   height: 100%;
+  position: relative;
   .drawingboard {
     background: inherit;
     cursor: crosshair;
     width: 100%;
     height: 100%;
+  }
+  .colors {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 3px solid #1f364d;
+
+    .color {
+      height: 20px;
+      width: 20px;
+      cursor: pointer;
+    }
+    .color.white {
+      background-color: white;
+    }
+    .color.red {
+      background-color: #f44336;
+    }
+    .color.green {
+      background-color: #4caf50;
+    }
+    .color.blue {
+      background-color: #2196f3;
+    }
+    .color.yellow {
+      background-color: #ffdd57;
+    }
   }
 }
 </style>

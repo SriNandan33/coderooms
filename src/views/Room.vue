@@ -1,36 +1,36 @@
 <template>
   <section>
-    <div class="container is-fluid toolbar">
-      <div class="columns">
-        <div class="column is-one-fifth">
-          <input v-model="room.name" type="text" class="input room-title" />
-        </div>
-        <div class="column is-one-fifth">
-          <multiselect
-            v-model="room.language"
-            class="languages"
-            :options="languages"
-            :show-labels="false"
-            placeholder="Select a language"
-            @input="setLanguageMode"
-          ></multiselect>
-        </div>
-        <div class="column">
-          <button class="button btn-secondary" @click="updateRoom">Save</button>
-        </div>
-      </div>
-    </div>
     <div class="container is-fluid dashboard">
       <div class="columns">
-        <div class="column is-half">
+        <div class="column is-half code-editor">
           <codemirror
             ref="cmEditor"
             :value="room.code"
             :options="cmOptions"
             @input="onCmCodeChange"
           />
+          <div class="toolbar">
+            <div class="columns">
+              <div class="column">
+                <input v-model="room.name" type="text" class="input room-title" />
+              </div>
+              <div class="column">
+                <multiselect
+                  v-model="room.language"
+                  class="languages"
+                  :options="languages"
+                  :show-labels="false"
+                  placeholder="Select a language"
+                  @input="setLanguageMode"
+                ></multiselect>
+              </div>
+              <div class="column">
+                <button class="button btn-secondary" @click="updateRoom">Save</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="column is-half">
+        <div class="column is-half drawing-board">
           <DrawingBoard />
         </div>
       </div>
@@ -118,7 +118,8 @@ export default {
   width: 100%;
   margin: 0;
 }
-.dashboard .columns .column {
+.dashboard .columns .code-editor,
+.dashboard .columns .drawing-board {
   padding: 0;
   border: 3px solid #1f364d;
   background: #001528;
@@ -135,9 +136,15 @@ export default {
   background: #001528 !important;
 }
 .toolbar {
-  padding: 10px;
   margin: 0;
   width: 100%;
+  height: 64px;
+  padding: 10px 0;
+  border-top: 1px solid #1f364d;
+}
+.toolbar .column {
+  padding: 0;
+  margin-left: 15px;
 }
 .toolbar .room-title,
 .toolbar .room-title:focus {
@@ -145,7 +152,7 @@ export default {
   color: #fff;
   border: none;
   border-bottom: 1px solid #1f364d;
-  border-radius: 0;
+  border-radius: 4px;
   outline: none;
 }
 .languages {
@@ -160,7 +167,7 @@ export default {
 }
 .languages >>> .multiselect__tags,
 .languages >>> .multiselect__content-wrapper {
-  border: 1px solid #1f364d;
+  border: none;
 }
 .languages >>> .multiselect__option {
   text-transform: capitalize;

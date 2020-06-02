@@ -1,6 +1,5 @@
 <template>
   <div class="drawingboard-container">
-    <h3 class="has-text-centered">Drawing Board</h3>
     <canvas
       id="canvas"
       class="drawingboard"

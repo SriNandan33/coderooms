@@ -14,7 +14,11 @@
           @input="changeLanguage"
         ></multiselect>
       </div>
-      <div class="column">
+      <div class="column actions">
+        <div class="terminal-icon" @click="$emit('toggle-console')">
+          <img src="/images/code.svg" height="50px" width="50px" alt="console" />
+        </div>
+        <button class="button btn-secondary" disabled>Run</button>
         <button class="button btn-secondary" @click="save">Save</button>
       </div>
     </div>
@@ -95,5 +99,22 @@ export default {
 }
 .languages >>> .multiselect__option {
   text-transform: capitalize;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+}
+.actions .terminal-icon {
+  border: 2px solid #1f364d;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.actions button {
+  margin-left: 5px;
 }
 </style>

@@ -9,12 +9,14 @@
             :options="cmOptions"
             @input="onCmCodeChange"
           />
+          <Console v-if="showConsole" />
           <Toolbar
             :language="room.language"
             :name="room.name"
             @change-language="changeLanguage"
             @edit-name="updateName"
             @save="updateRoom"
+            @toggle-console="toggleConsole"
           />
         </div>
         <div class="column is-half drawing-board">
@@ -26,6 +28,7 @@
 </template>
 
 <script>
+import Console from '../components/Console'
 import Toolbar from '../components/Toolbar'
 import DrawingBoard from '../components/DrawingBoard'
 import { codemirror } from 'vue-codemirror'
@@ -42,6 +45,7 @@ import 'codemirror/theme/monokai.css'
 export default {
   components: {
     codemirror,
+    Console,
     Toolbar,
     DrawingBoard
   },
@@ -67,7 +71,8 @@ export default {
       languageModes: {
         python: 'x-python',
         javascript: 'javascript'
-      }
+      },
+      showConsole: false
     }
   },
   computed: {
@@ -98,6 +103,9 @@ export default {
     },
     updateName(name) {
       this.room.name = name
+    },
+    toggleConsole() {
+      this.showConsole = !this.showConsole
     }
   }
 }
@@ -118,8 +126,14 @@ export default {
   border: 3px solid #1f364d;
   background: #001528;
 }
+.dashboard .columns .code-editor {
+  height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
 .vue-codemirror {
-  height: 80vh;
+  height: 100%;
   border-radius: 4px;
 }
 .vue-codemirror >>> .CodeMirror {

@@ -9,26 +9,13 @@
             :options="cmOptions"
             @input="onCmCodeChange"
           />
-          <div class="toolbar">
-            <div class="columns">
-              <div class="column">
-                <input v-model="room.name" type="text" class="input room-title" />
-              </div>
-              <div class="column">
-                <multiselect
-                  v-model="room.language"
-                  class="languages"
-                  :options="languages"
-                  :show-labels="false"
-                  placeholder="Select a language"
-                  @input="setLanguageMode"
-                ></multiselect>
-              </div>
-              <div class="column">
-                <button class="button btn-secondary" @click="updateRoom">Save</button>
-              </div>
-            </div>
-          </div>
+          <Toolbar
+            :language="room.language"
+            :name="room.name"
+            @change-language="changeLanguage"
+            @edit-name="updateName"
+            @save="updateRoom"
+          />
         </div>
         <div class="column is-half drawing-board">
           <DrawingBoard />
@@ -39,8 +26,8 @@
 </template>
 
 <script>
+import Toolbar from '../components/Toolbar'
 import DrawingBoard from '../components/DrawingBoard'
-import Multiselect from 'vue-multiselect'
 import { codemirror } from 'vue-codemirror'
 
 // import base style
@@ -55,7 +42,7 @@ import 'codemirror/theme/monokai.css'
 export default {
   components: {
     codemirror,
-    Multiselect,
+    Toolbar,
     DrawingBoard
   },
   props: {
@@ -70,7 +57,6 @@ export default {
         code: '',
         language: ''
       },
-      languages: ['javascript', 'python'],
       cmOptions: {
         tabSize: 4,
         mode: 'text/javascript',
@@ -104,6 +90,14 @@ export default {
     },
     setLanguageMode() {
       this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`
+    },
+    // toolbar event handlers
+    changeLanguage(language) {
+      this.room.language = language
+      this.setLanguageMode()
+    },
+    updateName(name) {
+      this.room.name = name
     }
   }
 }
@@ -134,42 +128,5 @@ export default {
 .vue-codemirror >>> .cm-s-monokai.CodeMirror,
 .vue-codemirror >>> .cm-s-monokai .CodeMirror-gutters {
   background: #001528 !important;
-}
-.toolbar {
-  margin: 0;
-  width: 100%;
-  height: 64px;
-  padding: 10px 0;
-  border-top: 1px solid #1f364d;
-}
-.toolbar .column {
-  padding: 0;
-  margin-left: 15px;
-}
-.toolbar .room-title,
-.toolbar .room-title:focus {
-  background: #0e2439;
-  color: #fff;
-  border: none;
-  border-bottom: 1px solid #1f364d;
-  border-radius: 4px;
-  outline: none;
-}
-.languages {
-  color: #fff;
-}
-.languages >>> .multiselect__tags,
-.languages >>> .multiselect__tags .multiselect__single,
-.languages >>> .multiselect__tags .multiselect__input,
-.languages >>> .multiselect__content-wrapper {
-  background: #0e2439;
-  text-transform: capitalize;
-}
-.languages >>> .multiselect__tags,
-.languages >>> .multiselect__content-wrapper {
-  border: none;
-}
-.languages >>> .multiselect__option {
-  text-transform: capitalize;
 }
 </style>

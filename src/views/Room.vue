@@ -9,13 +9,14 @@
             :options="cmOptions"
             @input="onCmCodeChange"
           />
-          <Console v-if="showConsole" />
+          <Console v-if="showConsole" :output="consoleOutput" :exit-code="consoleExitCode" />
           <Toolbar
             :language="room.language"
             :name="room.name"
             @change-language="changeLanguage"
             @edit-name="updateName"
             @save="updateRoom"
+            @run="runCode"
             @toggle-console="toggleConsole"
           />
         </div>
@@ -72,7 +73,9 @@ export default {
         python: 'x-python',
         javascript: 'javascript'
       },
-      showConsole: false
+      showConsole: false,
+      consoleOutput: '',
+      consoleExitCode: 0
     }
   },
   computed: {
@@ -106,6 +109,32 @@ export default {
     },
     toggleConsole() {
       this.showConsole = !this.showConsole
+    },
+    async runCode() {
+      let response
+      try {
+        response = await this.$http.post('code/run', {
+          code: this.room.code,
+          language: this.room.language
+        })
+      } catch {
+        return console.error('Failed to run code!')
+      }
+
+      this.showConsole = true
+      const runResult = response.data
+      if (runResult.run_status.status === 'CE') {
+        // compilation error
+        this.consoleOutput = runResult.compile_status
+        this.consoleExitCode = 1
+      } else if (runResult.run_status.status === 'AC') {
+        // accepted
+        this.consoleOutput = runResult.run_status.output
+        this.consoleExitCode = 0
+      } else if (runResult.run_status.status === 'RE') {
+        this.consoleOutput = runResult.run_status.stderr
+        this.consoleExitCode = 1
+      }
     }
   }
 }

@@ -18,7 +18,7 @@
         <div class="terminal-icon" @click="$emit('toggle-console')">
           <img src="/images/code.svg" height="50px" width="50px" alt="console" />
         </div>
-        <button class="button btn-secondary" disabled>Run</button>
+        <button class="button btn-secondary" @click="run">Run</button>
         <button class="button btn-secondary" @click="save">Save</button>
       </div>
     </div>
@@ -54,6 +54,9 @@ export default {
     },
     save() {
       this.$emit('save')
+    },
+    run() {
+      this.$emit('run')
     }
   }
 }

@@ -9,7 +9,9 @@
             :options="cmOptions"
             @input="onCmCodeChange"
           />
-          <Console v-if="showConsole" :output="consoleOutput" :exit-code="consoleExitCode" />
+          <transition name="fade">
+            <Console v-if="showConsole" :output="consoleOutput" :exit-code="consoleExitCode" />
+          </transition>
           <Toolbar
             :language="room.language"
             :name="room.name"
@@ -171,5 +173,15 @@ export default {
 .vue-codemirror >>> .cm-s-monokai.CodeMirror,
 .vue-codemirror >>> .cm-s-monokai .CodeMirror-gutters {
   background: #001528 !important;
+}
+
+/* vue transistion classes for console component*/
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -66,8 +66,7 @@ export default {
 .toolbar {
   margin: 0;
   width: 100%;
-  height: 64px;
-  padding: 10px 0;
+  padding: 10px 5px;
   border-top: 1px solid #1f364d;
 }
 .toolbar .columns {
@@ -76,6 +75,7 @@ export default {
 .toolbar .column {
   padding: 0;
   margin-left: 15px;
+  margin-top: 10px;
 }
 .toolbar .room-title,
 .toolbar .room-title:focus {

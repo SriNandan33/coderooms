@@ -27,7 +27,6 @@ export default {
 .console {
   height: 100%;
   width: 100%;
-  overflow-y: auto;
 
   .console__header {
     height: 35px;
@@ -37,7 +36,8 @@ export default {
   }
   .console__body {
     background-color: #001528;
-    height: 100%;
+    max-height: 85%;
+    overflow-y: auto;
   }
   .console__empty {
     padding: 10px;

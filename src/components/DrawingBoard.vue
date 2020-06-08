@@ -9,11 +9,26 @@
       @mousemove="onMouseMove"
     ></canvas>
     <div class="colors columns" @click="changeStrokeColor">
-      <div class="column color red" data-color="red"></div>
-      <div class="column color white" data-color="white"></div>
-      <div class="column color blue" data-color="blue"></div>
-      <div class="column color yellow" data-color="yellow"></div>
-      <div class="column color green" data-color="green"></div>
+      <div
+        :class="['column', 'color', 'red', currentColor == 'red' ? 'active': '']"
+        data-color="red"
+      ></div>
+      <div
+        :class="['column', 'color', 'white', currentColor == 'white' ? 'active': '']"
+        data-color="white"
+      ></div>
+      <div
+        :class="['column', 'color', 'blue', currentColor == 'blue' ? 'active': '']"
+        data-color="blue"
+      ></div>
+      <div
+        :class="['column', 'color', 'yellow', currentColor == 'yellow' ? 'active': '']"
+        data-color="yellow"
+      ></div>
+      <div
+        :class="['column', 'color', 'green', currentColor == 'green' ? 'active': '']"
+        data-color="green"
+      ></div>
     </div>
   </div>
 </template>
@@ -62,16 +77,14 @@ export default {
       this.canvasContext.beginPath()
       this.canvasContext.moveTo(x0, y0)
       this.canvasContext.lineTo(x1, y1)
-      this.canvasContext.strokeStyle = this.currentColor
+      this.canvasContext.strokeStyle = this.colorCodes[this.currentColor]
       this.canvasContext.lineWidth = 1.5
       this.canvasContext.stroke()
       this.canvasContext.closePath()
     },
     changeStrokeColor(event) {
       // eslint-disable-next-line standard/computed-property-even-spacing
-      this.currentColor = this.colorCodes[
-        event.target.attributes['data-color'].nodeValue
-      ]
+      this.currentColor = event.target.attributes['data-color'].nodeValue
     }
   }
 }
@@ -94,6 +107,7 @@ export default {
     border: 3px solid #1f364d;
 
     .color {
+      position: relative;
       height: 20px;
       width: 20px;
       cursor: pointer;
@@ -112,6 +126,17 @@ export default {
     }
     .color.yellow {
       background-color: #ffdd57;
+    }
+    .color.active::after {
+      background: rgba(0, 0, 0, 0.5);
+      content: '✔';
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      color: white;
+      top: 0;
+      left: 0;
+      text-align: center;
     }
   }
 }

@@ -15,8 +15,11 @@
         ></multiselect>
       </div>
       <div class="column actions">
-        <div class="terminal-icon" @click="$emit('toggle-console')">
+        <div class="toolbar-icon" @click="$emit('toggle-console')">
           <img src="/images/code.svg" height="50px" width="50px" alt="console" />
+        </div>
+        <div class="toolbar-icon">
+          <img src="/images/add-user.svg" height="50px" width="50px" alt="console" />
         </div>
         <button class="button btn-secondary" @click="run">Run</button>
         <button class="button btn-secondary" @click="save">Save</button>
@@ -108,7 +111,7 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.actions .terminal-icon {
+.actions .toolbar-icon {
   border: 2px solid #1f364d;
   width: 40px;
   height: 40px;

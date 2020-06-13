@@ -45,6 +45,9 @@ import 'codemirror/mode/python/python.js'
 // import theme style
 import 'codemirror/theme/monokai.css'
 
+// socketIO
+import socket from 'socket.io-client'
+
 export default {
   components: {
     codemirror,
@@ -77,7 +80,10 @@ export default {
       },
       showConsole: false,
       consoleOutput: '',
-      consoleExitCode: 0
+      consoleExitCode: 0,
+
+      // sockets
+      sockets: null
     }
   },
   computed: {
@@ -89,11 +95,22 @@ export default {
     const response = await this.$http.get(`rooms/${this.roomId}`)
     this.room = { ...this.room, ...response.data.room }
     this.setLanguageMode()
+
+    // connect to sockets
+    this.sockets = socket.connect(
+      `${process.env.VUE_APP_API_SOCKETS_URL}sockets/room`
+    )
+    this.sockets.emit('join-room', { roomId: this.roomId })
+    this.sockets.on('code-edited', this.syncCode)
   },
   async mounted() {},
   methods: {
     onCmCodeChange(newCode) {
       this.room.code = newCode
+      this.sockets.emit('code-edited', {
+        roomId: this.room.id,
+        code: this.room.code
+      })
     },
     async updateRoom() {
       await this.$http.put(`rooms/${this.roomId}`, this.room)
@@ -137,6 +154,12 @@ export default {
         this.consoleOutput = runResult.run_status.stderr
         this.consoleExitCode = 1
       }
+    },
+    // end of toolbar event handers
+
+    // sockets event handlers
+    syncCode(data) {
+      this.room.code = data.code
     }
   }
 }

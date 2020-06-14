@@ -18,8 +18,30 @@
         <div class="toolbar-icon" @click="$emit('toggle-console')">
           <img src="/images/code.svg" height="50px" width="50px" alt="console" />
         </div>
-        <div class="toolbar-icon">
-          <img src="/images/add-user.svg" height="50px" width="50px" alt="console" />
+        <div class="dropdown is-up is-right" :class="{'is-active': addingUser }">
+          <div class="dropdown-trigger">
+            <div
+              class="toolbar-icon"
+              aria-haspopup="true"
+              aria-controls="dropdown-menu"
+              @click="toggleEmailInput"
+            >
+              <img src="/images/add-user.svg" height="50px" width="50px" alt="console" />
+            </div>
+          </div>
+          <div id="dropdown-menu" class="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <div class="dropdown-item">
+                <input
+                  v-model="guestEmail"
+                  type="email"
+                  class="input"
+                  placeholder="Enter user email"
+                />
+                <button class="button btn-secondary" @click="handleAdd">Add</button>
+              </div>
+            </div>
+          </div>
         </div>
         <button class="button btn-secondary" @click="run">Run</button>
         <button class="button btn-secondary" @click="save">Save</button>
@@ -45,7 +67,9 @@ export default {
   },
   data() {
     return {
-      languages: ['javascript', 'python']
+      languages: ['javascript', 'python'],
+      addingUser: false,
+      guestEmail: ''
     }
   },
   methods: {
@@ -60,6 +84,14 @@ export default {
     },
     run() {
       this.$emit('run')
+    },
+    toggleEmailInput() {
+      this.addingUser = !this.addingUser
+    },
+    handleAdd() {
+      this.addingUser = false
+      this.$emit('add-user', this.guestEmail)
+      this.guestEmail = ''
     }
   }
 }
@@ -112,6 +144,7 @@ export default {
   justify-content: space-around;
 }
 .actions .toolbar-icon {
+  position: relative;
   border: 2px solid #1f364d;
   width: 40px;
   height: 40px;
@@ -122,5 +155,12 @@ export default {
 }
 .actions button {
   margin-left: 5px;
+}
+.dropdown-content {
+  background: #1f364d;
+  width: 400px;
+}
+.dropdown-item {
+  display: flex;
 }
 </style>

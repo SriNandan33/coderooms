@@ -20,6 +20,7 @@
             @save="updateRoom"
             @run="runCode"
             @toggle-console="toggleConsole"
+            @add-user="addGuest"
           />
         </div>
         <div class="column is-half drawing-board">
@@ -153,6 +154,16 @@ export default {
       } else if (runResult.run_status.status === 'RE') {
         this.consoleOutput = runResult.run_status.stderr
         this.consoleExitCode = 1
+      }
+    },
+    async addGuest(guestEmail) {
+      try {
+        const response = await this.$http.post(`rooms/${this.roomId}/guests`, {
+          email: guestEmail
+        })
+        this.room = { ...this.room, ...response.data.room }
+      } catch (err) {
+        console.log(err)
       }
     },
     // end of toolbar event handers

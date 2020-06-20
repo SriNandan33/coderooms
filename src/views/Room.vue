@@ -3,12 +3,7 @@
     <div class="container is-fluid dashboard">
       <div class="columns">
         <div class="column is-half code-editor">
-          <codemirror
-            ref="cmEditor"
-            :value="room.code"
-            :options="cmOptions"
-            @input="onCmCodeChange"
-          />
+          <codemirror ref="cmEditor" :value="room.code" :options="cmOptions" />
           <transition name="fade">
             <Console v-if="showConsole" :output="consoleOutput" :exit-code="consoleExitCode" />
           </transition>
@@ -104,10 +99,28 @@ export default {
     this.sockets.emit('join-room', { roomId: this.roomId })
     this.sockets.on('code-edited', this.syncCode)
   },
-  async mounted() {},
+  async mounted() {
+    /* Using codemirrors native change event...
+       ...to detect change Origin
+
+       Vue Codemirror does not provide access to changeObj
+    */
+    this.codemirror.on('change', (cm, changeObj) => {
+      this.onCmCodeChange(cm.getValue(), changeObj.origin)
+    })
+  },
   methods: {
-    onCmCodeChange(newCode) {
+    onCmCodeChange(newCode, origin) {
       this.room.code = newCode
+      /* only emit if user types
+         if the code is set by some methods
+         origin value will be setValue
+         if the code is set by typing event
+         origin value will be something like +input, +delete, +undo...etc
+
+         So we only emit if user types
+      */
+      if (origin === 'setValue') return
       this.sockets.emit('code-edited', {
         roomId: this.room.id,
         code: this.room.code

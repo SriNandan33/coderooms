@@ -19,7 +19,7 @@
           />
         </div>
         <div class="column is-half drawing-board">
-          <DrawingBoard />
+          <DrawingBoard ref="drawingBoard" @drawing="handleDrawing" />
         </div>
       </div>
     </div>
@@ -98,6 +98,7 @@ export default {
     )
     this.sockets.emit('join-room', { roomId: this.roomId })
     this.sockets.on('code-edited', this.syncCode)
+    this.sockets.on('drawing', this.syncDrawingBoard)
   },
   async mounted() {
     /* Using codemirrors native change event...
@@ -184,6 +185,14 @@ export default {
     // sockets event handlers
     syncCode(data) {
       this.room.code = data.code
+    },
+    syncDrawingBoard(data) {
+      this.$refs.drawingBoard.drawingHelper(data)
+    },
+
+    // child component event handlers
+    handleDrawing(data) {
+      this.sockets.emit('drawing', { ...data, ...{ roomId: this.roomId } })
     }
   }
 }

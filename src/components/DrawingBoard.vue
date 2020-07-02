@@ -69,18 +69,48 @@ export default {
     },
     onMouseMove(event) {
       if (!this.drawing) return
-      this.drawLine(this.currentX, this.currentY, event.layerX, event.layerY)
+      this.drawLine(
+        this.currentX,
+        this.currentY,
+        event.layerX,
+        event.layerY,
+        this.currentColor
+      )
       this.currentX = event.layerX
       this.currentY = event.layerY
     },
-    drawLine(x0, y0, x1, y1) {
+    drawLine(x0, y0, x1, y1, color, emit = true) {
       this.canvasContext.beginPath()
       this.canvasContext.moveTo(x0, y0)
       this.canvasContext.lineTo(x1, y1)
-      this.canvasContext.strokeStyle = this.colorCodes[this.currentColor]
+      this.canvasContext.strokeStyle = this.colorCodes[color]
       this.canvasContext.lineWidth = 1.5
       this.canvasContext.stroke()
       this.canvasContext.closePath()
+
+      if (emit) {
+        const canvasWidth = this.canvas.width
+        const canvasHeight = this.canvas.height
+        this.$emit('drawing', {
+          x0: x0 / canvasWidth,
+          y0: y0 / canvasHeight,
+          x1: x1 / canvasWidth,
+          y1: y1 / canvasHeight,
+          color: this.currentColor
+        })
+      }
+    },
+    drawingHelper(data) {
+      const canvasWidth = this.canvas.width
+      const canvasHeight = this.canvas.height
+      this.drawLine(
+        data.x0 * canvasWidth,
+        data.y0 * canvasHeight,
+        data.x1 * canvasWidth,
+        data.y1 * canvasHeight,
+        data.color,
+        false
+      )
     },
     changeStrokeColor(event) {
       // eslint-disable-next-line standard/computed-property-even-spacing

@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <VideoChat />
+    <VideoChat v-if="sockets" ref="videoChat" @host-connected="handleHostConnected" />
   </section>
 </template>
 
@@ -45,7 +45,6 @@ import 'codemirror/theme/monokai.css'
 
 // socketIO
 import socket from 'socket.io-client'
-import Peer from 'peerjs'
 
 export default {
   components: {
@@ -83,11 +82,7 @@ export default {
       consoleExitCode: 0,
 
       // sockets
-      sockets: null,
-
-      // video chat
-      hostId: null,
-      peerId: null
+      sockets: null
     }
   },
   computed: {
@@ -100,28 +95,16 @@ export default {
     this.room = { ...this.room, ...response.data.room }
     this.setLanguageMode()
 
-    // connect to webRTC server and get a peerID
-    const peer = new Peer({
-      host: process.env.VUE_APP_API_PEERJS_HOST,
-      port: process.env.VUE_APP_API_PEERJS_PORT,
-      path: '/'
-    })
-
     // connect to sockets
     this.sockets = socket.connect(
       `${process.env.VUE_APP_API_SOCKETS_URL}sockets/room`
     )
 
-    peer.on('open', (id) => {
-      this.hostId = id
-      this.sockets.emit('join-room', {
-        roomId: this.roomId,
-        peerId: this.hostId
-      })
-    })
-    this.sockets.on('user-joined', this.handleUserJoined)
+    this.sockets.emit('join-room', { roomId: this.roomId })
     this.sockets.on('code-edited', this.syncCode)
     this.sockets.on('drawing', this.syncDrawingBoard)
+    this.sockets.on('user-video-connected', this.handlePeerConnected)
+    this.sockets.on('user-disconnected', this.handleUserDisconnected)
   },
   async mounted() {
     /* Using codemirrors native change event...
@@ -213,13 +196,24 @@ export default {
     syncDrawingBoard(data) {
       this.$refs.drawingBoard.drawingHelper(data)
     },
-    handleUserJoined(data) {
-      this.peerId = data.peerId
-    },
 
     // child component event handlers
     handleDrawing(data) {
       this.sockets.emit('drawing', { ...data, ...{ roomId: this.roomId } })
+    },
+
+    // video chat handlers
+    handleHostConnected(hostId) {
+      this.sockets.emit('user-video-connected', {
+        roomId: this.roomId,
+        peerId: hostId
+      })
+    },
+    handlePeerConnected(data) {
+      this.$refs.videoChat.connectToPeer(data.peerId)
+    },
+    handleUserDisconnected() {
+      this.$refs.videoChat.disconnectPeer()
     }
   }
 }

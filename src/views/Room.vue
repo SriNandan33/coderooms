@@ -23,6 +23,7 @@
         </div>
       </div>
     </div>
+    <VideoChat :peer-id="peerId" :host-id="currentUser.id" />
   </section>
 </template>
 
@@ -30,7 +31,9 @@
 import Console from '../components/Console'
 import Toolbar from '../components/Toolbar'
 import DrawingBoard from '../components/DrawingBoard'
+import VideoChat from '../components/VideoChat'
 import { codemirror } from 'vue-codemirror'
+import { mapGetters } from 'vuex'
 
 // import base style
 import 'codemirror/lib/codemirror.css'
@@ -49,7 +52,8 @@ export default {
     codemirror,
     Console,
     Toolbar,
-    DrawingBoard
+    DrawingBoard,
+    VideoChat
   },
   props: {
     roomId: {
@@ -79,10 +83,14 @@ export default {
       consoleExitCode: 0,
 
       // sockets
-      sockets: null
+      sockets: null,
+
+      // video chat
+      peerId: null
     }
   },
   computed: {
+    ...mapGetters(['currentUser']),
     codemirror() {
       return this.$refs.cmEditor.codemirror
     }
@@ -91,6 +99,8 @@ export default {
     const response = await this.$http.get(`rooms/${this.roomId}`)
     this.room = { ...this.room, ...response.data.room }
     this.setLanguageMode()
+
+    this.peerId = this.getPeerId() // set peer id for video chat
 
     // connect to sockets
     this.sockets = socket.connect(
@@ -132,6 +142,13 @@ export default {
     },
     setLanguageMode() {
       this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`
+    },
+    getPeerId() {
+      if (this.currentUser.id === this.room.owner) {
+        // only support peer to peer chat for now
+        return this.room.guests[0]
+      }
+      return this.room.owner
     },
     // toolbar event handlers
     changeLanguage(language) {

@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <VideoChat :peer-id="peerId" :host-id="currentUser.id" />
+    <VideoChat />
   </section>
 </template>
 
@@ -33,7 +33,6 @@ import Toolbar from '../components/Toolbar'
 import DrawingBoard from '../components/DrawingBoard'
 import VideoChat from '../components/VideoChat'
 import { codemirror } from 'vue-codemirror'
-import { mapGetters } from 'vuex'
 
 // import base style
 import 'codemirror/lib/codemirror.css'
@@ -46,6 +45,7 @@ import 'codemirror/theme/monokai.css'
 
 // socketIO
 import socket from 'socket.io-client'
+import Peer from 'peerjs'
 
 export default {
   components: {
@@ -86,11 +86,11 @@ export default {
       sockets: null,
 
       // video chat
+      hostId: null,
       peerId: null
     }
   },
   computed: {
-    ...mapGetters(['currentUser']),
     codemirror() {
       return this.$refs.cmEditor.codemirror
     }
@@ -100,13 +100,26 @@ export default {
     this.room = { ...this.room, ...response.data.room }
     this.setLanguageMode()
 
-    this.peerId = this.getPeerId() // set peer id for video chat
+    // connect to webRTC server and get a peerID
+    const peer = new Peer({
+      host: process.env.VUE_APP_API_PEERJS_HOST,
+      port: process.env.VUE_APP_API_PEERJS_PORT,
+      path: '/'
+    })
 
     // connect to sockets
     this.sockets = socket.connect(
       `${process.env.VUE_APP_API_SOCKETS_URL}sockets/room`
     )
-    this.sockets.emit('join-room', { roomId: this.roomId })
+
+    peer.on('open', (id) => {
+      this.hostId = id
+      this.sockets.emit('join-room', {
+        roomId: this.roomId,
+        peerId: this.hostId
+      })
+    })
+    this.sockets.on('user-joined', this.handleUserJoined)
     this.sockets.on('code-edited', this.syncCode)
     this.sockets.on('drawing', this.syncDrawingBoard)
   },
@@ -143,13 +156,7 @@ export default {
     setLanguageMode() {
       this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`
     },
-    getPeerId() {
-      if (this.currentUser.id === this.room.owner) {
-        // only support peer to peer chat for now
-        return this.room.guests[0]
-      }
-      return this.room.owner
-    },
+
     // toolbar event handlers
     changeLanguage(language) {
       this.room.language = language
@@ -205,6 +212,9 @@ export default {
     },
     syncDrawingBoard(data) {
       this.$refs.drawingBoard.drawingHelper(data)
+    },
+    handleUserJoined(data) {
+      this.peerId = data.peerId
     },
 
     // child component event handlers

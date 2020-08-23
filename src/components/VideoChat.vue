@@ -1,5 +1,7 @@
 <template>
-  <div id="video-chat"></div>
+  <div id="video-chat">
+    <video id="host-video"></video>
+  </div>
 </template>
 
 <script>
@@ -11,7 +13,8 @@ export default {
       peerId: null,
       hostStream: null,
       peerStream: null,
-      videoConnection: null
+      videoConnection: null,
+      peerCall: null
     }
   },
   beforeDestroy() {
@@ -36,26 +39,31 @@ export default {
       call.answer(this.hostStream)
       const peerVideo = document.createElement('video')
       call.on('stream', (userVideoStream) => {
+        this.peerStream = userVideoStream
         this.addVideoStream(peerVideo, userVideoStream)
       })
+      call.on('close', () => {
+        peerVideo.remove()
+      })
+      this.peerCall = call
     })
   },
   methods: {
     connectToPeer(peerId) {
-      console.log('calling Peer')
       this.peerId = peerId
       const call = this.videoConnection.call(peerId, this.hostStream)
       const peerVideo = document.createElement('video')
       call.on('stream', (userVideoStream) => {
-        console.log('on stream')
+        this.peerStream = userVideoStream
         this.addVideoStream(peerVideo, userVideoStream)
       })
       call.on('close', () => {
-        peerVideo.close()
+        peerVideo.remove()
       })
+      this.peerCall = call
     },
     disconnectPeer() {
-      console.log('disconnting peer')
+      this.peerCall.close()
     },
     startStream() {
       navigator.mediaDevices
@@ -65,7 +73,7 @@ export default {
         })
         .then((stream) => {
           this.hostStream = stream
-          const hostVideo = document.createElement('video')
+          const hostVideo = document.getElementById('host-video')
           hostVideo.muted = true
           this.addVideoStream(hostVideo, stream)
         })
@@ -76,7 +84,7 @@ export default {
       video.addEventListener('loadedmetadata', () => {
         video.play()
       })
-      videoChat.appendChild(video)
+      videoChat.append(video)
     }
   }
 }

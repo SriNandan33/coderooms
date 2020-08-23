@@ -90,6 +90,9 @@ export default {
       return this.$refs.cmEditor.codemirror
     }
   },
+  beforeDestroy() {
+    this.sockets.close()
+  },
   async created() {
     const response = await this.$http.get(`rooms/${this.roomId}`)
     this.room = { ...this.room, ...response.data.room }

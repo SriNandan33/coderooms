@@ -23,7 +23,9 @@
         </div>
       </div>
     </div>
-    <VideoChat v-if="sockets" ref="videoChat" @host-connected="handleHostConnected" />
+    <div class="video-chat">
+      <VideoChat v-if="sockets" ref="videoChat" @host-connected="handleHostConnected" />
+    </div>
   </section>
 </template>
 
@@ -263,5 +265,11 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+.video-chat {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  display: flex;
 }
 </style>

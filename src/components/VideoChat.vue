@@ -84,6 +84,8 @@ export default {
       video.addEventListener('loadedmetadata', () => {
         video.play()
       })
+      video.style.width = '150px'
+      video.style.height = '150px'
       videoChat.append(video)
     }
   }
@@ -91,4 +93,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+video {
+  margin-right: 10px;
+}
 </style>

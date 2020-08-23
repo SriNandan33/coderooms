@@ -239,7 +239,8 @@ export default {
   border: 3px solid #1f364d;
   background: #001528;
 }
-.dashboard .columns .code-editor {
+.dashboard .columns .code-editor,
+.dashboard .columns .drawing-board {
   height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;

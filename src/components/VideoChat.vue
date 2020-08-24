@@ -37,21 +37,16 @@ export default {
 
     this.videoConnection.on('call', (call) => {
       call.answer(this.hostStream)
-      const peerVideo = document.createElement('video')
-      call.on('stream', (userVideoStream) => {
-        this.peerStream = userVideoStream
-        this.addVideoStream(peerVideo, userVideoStream)
-      })
-      call.on('close', () => {
-        peerVideo.remove()
-      })
-      this.peerCall = call
+      this.addPeerVideoStream(call)
     })
   },
   methods: {
     connectToPeer(peerId) {
       this.peerId = peerId
       const call = this.videoConnection.call(peerId, this.hostStream)
+      this.addPeerVideoStream(call)
+    },
+    addPeerVideoStream(call) {
       const peerVideo = document.createElement('video')
       call.on('stream', (userVideoStream) => {
         this.peerStream = userVideoStream

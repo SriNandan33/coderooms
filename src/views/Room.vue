@@ -23,6 +23,9 @@
         </div>
       </div>
     </div>
+    <div class="video-chat">
+      <VideoChat v-if="sockets" ref="videoChat" @host-connected="handleHostConnected" />
+    </div>
   </section>
 </template>
 
@@ -30,6 +33,7 @@
 import Console from '../components/Console'
 import Toolbar from '../components/Toolbar'
 import DrawingBoard from '../components/DrawingBoard'
+import VideoChat from '../components/VideoChat'
 import { codemirror } from 'vue-codemirror'
 
 // import base style
@@ -49,7 +53,8 @@ export default {
     codemirror,
     Console,
     Toolbar,
-    DrawingBoard
+    DrawingBoard,
+    VideoChat
   },
   props: {
     roomId: {
@@ -87,6 +92,9 @@ export default {
       return this.$refs.cmEditor.codemirror
     }
   },
+  beforeDestroy() {
+    this.sockets.close()
+  },
   async created() {
     const response = await this.$http.get(`rooms/${this.roomId}`)
     this.room = { ...this.room, ...response.data.room }
@@ -96,9 +104,12 @@ export default {
     this.sockets = socket.connect(
       `${process.env.VUE_APP_API_SOCKETS_URL}sockets/room`
     )
+
     this.sockets.emit('join-room', { roomId: this.roomId })
     this.sockets.on('code-edited', this.syncCode)
     this.sockets.on('drawing', this.syncDrawingBoard)
+    this.sockets.on('user-video-connected', this.handlePeerConnected)
+    this.sockets.on('user-disconnected', this.handleUserDisconnected)
   },
   async mounted() {
     /* Using codemirrors native change event...
@@ -133,6 +144,7 @@ export default {
     setLanguageMode() {
       this.cmOptions.mode = `text/${this.languageModes[this.room.language]}`
     },
+
     // toolbar event handlers
     changeLanguage(language) {
       this.room.language = language
@@ -193,6 +205,20 @@ export default {
     // child component event handlers
     handleDrawing(data) {
       this.sockets.emit('drawing', { ...data, ...{ roomId: this.roomId } })
+    },
+
+    // video chat handlers
+    handleHostConnected(hostId) {
+      this.sockets.emit('user-video-connected', {
+        roomId: this.roomId,
+        peerId: hostId
+      })
+    },
+    handlePeerConnected(data) {
+      this.$refs.videoChat.connectToPeer(data.peerId)
+    },
+    handleUserDisconnected() {
+      this.$refs.videoChat.disconnectPeer()
     }
   }
 }
@@ -213,7 +239,8 @@ export default {
   border: 3px solid #1f364d;
   background: #001528;
 }
-.dashboard .columns .code-editor {
+.dashboard .columns .code-editor,
+.dashboard .columns .drawing-board {
   height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
@@ -239,5 +266,11 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+.video-chat {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  display: flex;
 }
 </style>

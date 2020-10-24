@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="container is-fluid dashboard">
-      <div class="columns">
+      <div class="columns holder">
         <div class="column is-half code-editor">
           <codemirror ref="cmEditor" :value="room.code" :options="cmOptions" />
           <transition name="fade">
@@ -18,6 +18,7 @@
             @add-user="addGuest"
           />
         </div>
+        <div class="column resizer"></div>
         <div class="column is-half drawing-board">
           <DrawingBoard ref="drawingBoard" @drawing="handleDrawing" />
         </div>
@@ -120,6 +121,8 @@ export default {
     this.codemirror.on('change', (cm, changeObj) => {
       this.onCmCodeChange(cm.getValue(), changeObj.origin)
     })
+
+    this.addResizeListeners()
   },
   methods: {
     onCmCodeChange(newCode, origin) {
@@ -219,6 +222,31 @@ export default {
     },
     handleUserDisconnected() {
       this.$refs.videoChat.disconnectPeer()
+    },
+
+    // Resize listenrs
+    addResizeListeners(){
+      const resizer = document.querySelector('.resizer')
+      const holder = document.querySelector('.holder')
+      const editor = document.querySelector('.code-editor')
+      const drawingBoard = document.querySelector('.drawing-board')
+      const parentWidth = holder.offsetWidth
+      let isMouseDown = false;
+
+      resizer.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+      })
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        editor.style.width = `${e.clientX}px`
+        drawingBoard.style.width = `${parentWidth - e.clientX}px`
+      })
+
+      document.addEventListener('mouseup', () => {
+        isMouseDown = false;
+      })
+
     }
   }
 }
@@ -272,5 +300,10 @@ export default {
   bottom: 0px;
   right: 0px;
   display: flex;
+}
+.resizer{
+  padding: 0 2px;
+  background-color: #1f364d;
+  cursor: col-resize;
 }
 </style>

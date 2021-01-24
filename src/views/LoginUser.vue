@@ -53,6 +53,7 @@ export default {
           password: this.password
         })
         .then(() => {
+          this.$store.dispatch('showSuccessToast', 'Logged in sucessfully')
           this.$router.push({ name: 'dashboard' })
         })
         .catch(err => {

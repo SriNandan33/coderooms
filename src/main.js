@@ -4,12 +4,18 @@ import App from './App.vue'
 import router from './router'
 import store from './vuex/store'
 import axios from './http'
-
+import VueToast from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
+Vue.use(VueToast, {
+  duration: 3000,
+  position: 'top',
+  dismissible: true
+})
 Vue.use(Loading, {
   loader: 'bars',
   color: '#fff',

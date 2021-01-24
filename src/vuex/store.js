@@ -39,6 +39,18 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       commit('CLEAR_USER_DATA')
+    },
+    showSuccessToast({ commit }, message) {
+      this._vm.$toast.open({
+        message: message,
+        type: 'success'
+      })
+    },
+    showErrorToast({ commit }, message) {
+      this._vm.$toast.open({
+        message: message,
+        type: 'error'
+      })
     }
   },
   getters: {

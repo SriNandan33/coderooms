@@ -225,28 +225,27 @@ export default {
     },
 
     // Resize listenrs
-    addResizeListeners(){
+    addResizeListeners() {
       const resizer = document.querySelector('.resizer')
       const holder = document.querySelector('.holder')
       const editor = document.querySelector('.code-editor')
       const drawingBoard = document.querySelector('.drawing-board')
       const parentWidth = holder.offsetWidth
-      let isMouseDown = false;
+      let isMouseDown = false
 
       resizer.addEventListener('mousedown', (e) => {
-        isMouseDown = true;
+        isMouseDown = true
       })
 
       document.addEventListener('mousemove', (e) => {
-        if (!isMouseDown) return;
+        if (!isMouseDown) return
         editor.style.width = `${e.clientX}px`
         drawingBoard.style.width = `${parentWidth - e.clientX}px`
       })
 
       document.addEventListener('mouseup', () => {
-        isMouseDown = false;
+        isMouseDown = false
       })
-
     }
   }
 }

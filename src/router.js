@@ -5,6 +5,7 @@ import RegisterUser from './views/RegisterUser.vue'
 import LoginUser from './views/LoginUser.vue'
 import Room from './views/Room.vue'
 import ForgotPassword from './views/ForgotPassword'
+import ResetPassword from './views/ResetPassword'
 
 Vue.use(Router)
 
@@ -33,6 +34,12 @@ const router = new Router({
       path: '/forgot_password',
       name: 'forgotpassword',
       component: ForgotPassword
+    },
+    {
+      path: '/reset_password/:token',
+      name: 'resetpassword',
+      props: true,
+      component: ResetPassword
     },
     {
       path: '/rooms/:roomId',

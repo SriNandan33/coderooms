@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .reset-page{
   justify-content: flex-start;
   padding: 10%;

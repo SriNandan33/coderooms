@@ -26,7 +26,7 @@
           />
 
           <button type="submit" name="button" class="button btn-primary">Login</button>
-
+          <span class="reset"><router-link to="/forgot_password">Forgot Password?</router-link></span>
           <p class="has-text-danger">{{ error }}</p>
 
           <router-link to="/register">Don't have an account? Register.</router-link>
@@ -65,4 +65,8 @@ export default {
 </script>
 
 <style scoped>
+.reset {
+  display: inline-block;
+  padding: 10px;
+}
 </style>

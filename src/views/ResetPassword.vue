@@ -44,12 +44,22 @@ export default {
     }
   },
   methods: {
-    resetPassword() {
+    async resetPassword() {
       this.error = ''
       if (!this.passwordsMatched()) {
         this.error = 'Passwords do not match'
       } else {
-        console.log("reseting....", this.token)
+        try {
+          await this.$http.post(`/auth/reset_password/${this.token}`, {
+            password: this.password,
+            confirmPassword: this.confirmPassword
+          })
+          this.$store.dispatch('showSuccessToast', 'Your password updated successfully')
+          this.$router.push({ name: 'login' })
+        } catch (err) {
+          const error = err.response.data
+          this.$store.dispatch('showErrorToast', error.message)
+        }
       }
     },
     passwordsMatched() {

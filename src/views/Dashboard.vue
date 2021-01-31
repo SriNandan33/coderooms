@@ -24,15 +24,24 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
       rooms: []
     }
   },
+  computed: {
+    ...mapGetters(['currentUser'])
+  },
   async created() {
-    const response = await this.$http.get('rooms')
-    this.rooms = response.data.rooms
+    if (!this.currentUser.verified) {
+      this.$router.push({ name: 'verifyuser' })
+    } else {
+      const response = await this.$http.get('rooms')
+      this.rooms = response.data.rooms
+    }
   },
   methods: {
     async createRoom() {
